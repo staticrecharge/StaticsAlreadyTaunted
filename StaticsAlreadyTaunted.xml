@@ -4,30 +4,31 @@
     <TopLevelControl name="SAT_Panel" mouseEnabled="true" movable="false" clampedToScreen="true" hidden="false" resizeToFitDescendents="true">
       <Anchor point="TOPLEFT" relativeTo="GuiRoot" relativePoint="CENTER" offsetX="100" offsetY="0" />
       <OnMoveStop> SAT_ON_MOVE_STOP() </OnMoveStop>
+      <OnUpdate> SAT_ON_UPDATE() </OnUpdate>
       <Controls>
 
-        <Backdrop name="$(parent)Backdrop" centerColor="FF0000" edgeColor="FF0000" hidden="true">
-          <Dimensions x="64" y ="64" />
+        <Backdrop name="$(parent)Backdrop" edgeColor="FF0000" hidden="true">
+          <Dimensions x="32" y ="32" />
           <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER" offsetX="0" offsetY="0" />
         </Backdrop>
 
         <Texture name="$(parent)Icon_Other" color="FF0000" alpha="1" textureFile="/esoui/art/tutorial/gamepad/gp_lfg_tank.dds" hidden="true">
-          <Dimensions x="64" y="64" />
+          <Dimensions x="32" y="32" />
 					<Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER" offsetX="0" offsetY="0" />
 				</Texture>
 
         <Texture name="$(parent)Icon_Player" color="00FF00" alpha="1" textureFile="/esoui/art/tutorial/gamepad/gp_lfg_tank.dds" hidden="true">
-          <Dimensions x="64" y="64" />
+          <Dimensions x="32" y="32" />
 					<Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER" offsetX="0" offsetY="0" />
 				</Texture>
 
         <Texture name="$(parent)Icon_Companion" color="0000FF" alpha="1" textureFile="/esoui/art/tutorial/gamepad/gp_lfg_tank.dds" hidden="true">
-          <Dimensions x="64" y="64" />
+          <Dimensions x="32" y="32" />
 					<Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER" offsetX="0" offsetY="0" />
 				</Texture>
 
         <Texture name="$(parent)Icon_OverTaunted" color="FF0000" alpha="1" textureFile="/esoui/art/tutorial/gamepad/gp_lfg_tank.dds" hidden="true">
-          <Dimensions x="64" y="64" />
+          <Dimensions x="32" y="32" />
 					<Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER" offsetX="0" offsetY="0" />
 				</Texture>
 
