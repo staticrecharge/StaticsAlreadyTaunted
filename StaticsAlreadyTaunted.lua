@@ -43,6 +43,7 @@ SAT.Const = {
   sizeMin = 16,
   sizeMax = 128,
   sizeStep = 4,
+  updateDelayMS = 200,
 }
 
 SAT.Icons = {
@@ -95,7 +96,6 @@ SAT.Defaults = {
     blinkThreshold = 3,
   },
 }
-
 SAT.unlocked = false
 
 
@@ -110,10 +110,6 @@ function SAT.SendToChat(text)
   end
 end
 
-function SAT.Debug()
-  d("Debug")
-end
-
 
 --[[----------------------------------------------
 Icon Control Functions
@@ -126,7 +122,15 @@ end
 
 function SAT_ON_UPDATE()
   if not SAT.initialized then return end
-  SAT.UpdateTarget()
+  if SAT.lastUpdate then
+    local now = GetFrameTimeSeconds()
+    if (now - SAT.lastUpdate) >= SAT.Const.updateDelayMS / 1000 then
+      SAT.UpdateTarget()
+      SAT.lastUpdate = now
+    end
+  else
+    SAT.lastUpdate = GetFrameTimeSeconds()
+  end  
 end
 
 function SAT.RestorePanel()
@@ -232,7 +236,7 @@ end
 function SAT.UpdateDuration(timeEnding)
   if not SAT.SavedVars.showDuration then SAT.Controls.Duration:SetHidden(true) return end
   local duration = math.max(timeEnding - GetFrameTimeSeconds(), 0)
-  SAT.Controls.Duration:SetText(string.format("%is", duration))
+  SAT.Controls.Duration:SetText(string.format("%i", duration))
   SAT.Controls.Duration:SetHidden(false)
 end
 
@@ -661,7 +665,7 @@ function SAT.UpdateTarget()
   if Taunts[SAT.Const.tauntCounterAbilityID] then
     SAT.UpdateStackCount(Taunts[SAT.Const.tauntCounterAbilityID].stackCount)
   else
-    SAT.UpdateStackCount(0)
+    SAT.Controls.StackCount:SetHidden(true)
   end
 
   if Taunts[SAT.Const.playerTauntAbilityID] then
@@ -675,7 +679,6 @@ function SAT.UpdateTarget()
     end
     SAT.Controls.Companion:SetHidden(true)
     SAT.Controls.OverTaunted:SetHidden(true)
-    SAT.Controls.StackCount:SetHidden(false)
     SAT.UpdateDuration(data.timeEnding)
   elseif Taunts[SAT.Const.companionTauntAbilityID] and SAT.SavedVars.Companion.enabled then
     local data = Taunts[SAT.Const.companionTauntAbilityID]
@@ -704,14 +707,6 @@ function SAT.UpdateTarget()
   end
 end
 
-function SAT.OnReticleTargetChanged(eventCode)
-  SAT.UpdateTarget()
-end
-
-function SAT.OnEffectChanged(eventCode, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, buffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceUnitType)
-  SAT.UpdateTarget()
-end
-
 
 --[[----------------------------------------------
 Initialization
@@ -737,6 +732,7 @@ function SAT.OnAddonLoaded(eventCode, addonName)
   SAT.CreateSettingsWindow()
   SAT.RestorePanel()
   SAT.UpdateIcons()
+  SAT.UpdateFontSize()
 
   SAT.animation1, SAT.timeline1 = CreateSimpleAnimation(ANIMATION_ALPHA, SAT.Controls.Panel)
   SAT.animation2, SAT.timeline2 = CreateSimpleAnimation(ANIMATION_ALPHA, SAT.Controls.Labels)
@@ -760,26 +756,7 @@ function SAT.OnAddonLoaded(eventCode, addonName)
     EM:UnregisterForEvent(SAT.addonName, EVENT_PLAYER_ACTIVATED)
   end)
 
-  EM:RegisterForEvent(SAT.addonName, EVENT_RETICLE_TARGET_CHANGED, SAT.OnReticleTargetChanged)
-
-  EM:RegisterForEvent(SAT.addonName .. "Player", EVENT_EFFECT_CHANGED, SAT.OnEffectChanged)
-  EM:AddFilterForEvent(SAT.addonName .. "Player", EVENT_EFFECT_CHANGED, REGISTER_FILTER_UNIT_TAG, SAT.Const.tagetUnitTag)
-  EM:AddFilterForEvent(SAT.addonName .. "Player", EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, SAT.Const.playerTauntAbilityID)
-
-  EM:RegisterForEvent(SAT.addonName .. "PlayerCounter", EVENT_EFFECT_CHANGED, SAT.OnEffectChanged)
-  EM:AddFilterForEvent(SAT.addonName .. "PlayerCounter", EVENT_EFFECT_CHANGED, REGISTER_FILTER_UNIT_TAG, SAT.Const.tagetUnitTag)
-  EM:AddFilterForEvent(SAT.addonName .. "PlayerCounter", EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, SAT.Const.tauntCounterAbilityID)
-
-  EM:RegisterForEvent(SAT.addonName .. "Companion", EVENT_EFFECT_CHANGED, SAT.OnEffectChanged)
-  EM:AddFilterForEvent(SAT.addonName .. "Companion", EVENT_EFFECT_CHANGED, REGISTER_FILTER_UNIT_TAG, SAT.Const.tagetUnitTag)
-  EM:AddFilterForEvent(SAT.addonName .. "Companion", EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, SAT.Const.companionTauntAbilityID)
-
-  EM:RegisterForEvent(SAT.addonName .. "OverTaunted", EVENT_EFFECT_CHANGED, SAT.OnEffectChanged)
-  EM:AddFilterForEvent(SAT.addonName .. "OverTaunted", EVENT_EFFECT_CHANGED, REGISTER_FILTER_UNIT_TAG, SAT.Const.tagetUnitTag)
-  EM:AddFilterForEvent(SAT.addonName .. "OverTaunted", EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, SAT.Const.overTauntedAbilityID)
-    
   SLASH_COMMANDS["/satunlock"] = SAT.Unlock
-  SLASH_COMMANDS["/satdebug"] = SAT.Debug
 
   SAT.initialized = true
 end
