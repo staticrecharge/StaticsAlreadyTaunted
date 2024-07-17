@@ -1,12 +1,12 @@
-## Title: Static's Already Taunted 1.0.0
+## Title: |cFF0000Static's Already Taunted|r 2.0.0
 ## Author: |cFF0000Static_Recharge|r
-## Version: 1.0.0
-## AddOnVersion: 1
+## Version: 2.0.0
+## AddOnVersion: 2
 ## APIVersion: 101042
 ## DependsOn: LibAddonMenu-2.0
 ## SavedVariables: StaticsAlreadyTaunted
 ## IsLibrary: false
-## Description: Displays an icon to indicate if the current target is already taunted by someone other than you.
+## Description: Displays an icon to indicate the current taunt status of the target.
 
 # This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
 # The Elder Scrolls® and related logos are registered trademarks or trademarks of ZeniMax Media Inc. in the United States and/or other countries. 
