@@ -1,3 +1,7 @@
+2.0.1
+  - Fixed an issue with the add-on not recognizing the companion ranged taunt debuff
+  - Updated for Update 44
+
 2.0.0
   - Added player taunt detection
   - Added companion taunt detection

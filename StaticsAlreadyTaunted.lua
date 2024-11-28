@@ -1,7 +1,7 @@
 --[[----------------------------------------------
 Static's Already Taunted
 Author: Static_Recharge
-Version: 1.0.0
+Version: 2.0.1
 Description: Indicates if a target is already
 taunted by another source.
 ----------------------------------------------]]--
@@ -12,7 +12,7 @@ Addon Information
 ----------------------------------------------]]--
 local SAT = {
   addonName = "StaticsAlreadyTaunted",
-  addonVersion = "2.0.0",
+  addonVersion = "2.0.1",
   author = "|cFF0000Static_Recharge|r",
   varsVersion = 2,
 }
@@ -38,6 +38,7 @@ SAT.Const = {
   playerTauntAbilityID = 38254,
   tauntCounterAbilityID = 52790,
   companionTauntAbilityID = 157235,
+  companionRangedTauntAbilityID = 157242,
   overTauntedAbilityID = 52788,
   targetUnitTag = "reticleover",
   sizeMin = 16,
@@ -660,6 +661,7 @@ function SAT.UpdateTarget()
       abilityId = abilityId,
       castByPlayer = castByPlayer,
     }
+    --SAT.SendToChat(string.format("%s: %d", buffName, abilityId))
   end
 
   if Taunts[SAT.Const.tauntCounterAbilityID] then
@@ -680,8 +682,8 @@ function SAT.UpdateTarget()
     SAT.Controls.Companion:SetHidden(true)
     SAT.Controls.OverTaunted:SetHidden(true)
     SAT.UpdateDuration(data.timeEnding)
-  elseif Taunts[SAT.Const.companionTauntAbilityID] and SAT.SavedVars.Companion.enabled then
-    local data = Taunts[SAT.Const.companionTauntAbilityID]
+  elseif (Taunts[SAT.Const.companionTauntAbilityID] or Taunts[SAT.Const.companionRangedTauntAbilityID]) and SAT.SavedVars.Companion.enabled then
+    local data = Taunts[SAT.Const.companionTauntAbilityID] or Taunts[SAT.Const.companionRangedTauntAbilityID]
     SAT.Controls.Other:SetHidden(true)
     SAT.Controls.Player:SetHidden(true)
     SAT.Controls.Companion:SetHidden(false)
